@@ -1,5 +1,6 @@
 import os
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def read_data(filename):
@@ -48,25 +49,25 @@ if __name__ == '__main__':
     ################################## Histograms #########################################
 
         plt.hist(type_1_x, color='yellow', edgecolor='black')
-        plt.title("MFCCs_10 Histogram for File: " + file + " and class: HylaMinuta")
+        plt.title("File: " + file + "\nMFCCs_10 Histogram for class: HylaMinuta")
         plt.xlabel('MFCCs_10')
         plt.ylabel('Frequency')
         plt.show()
 
         plt.hist(type_1_y, color='blue', edgecolor='black')
-        plt.title("MFCCs_17 Histogram for File: " + file + " and class: HylaMinuta")
+        plt.title("File: " + file + "\nMFCCs_17 Histogram for class: HylaMinuta")
         plt.xlabel('MFCCs_17')
         plt.ylabel('Frequency')
         plt.show()
 
         plt.hist(type_2_x, color='yellow', edgecolor='black')
-        plt.title("MFCCs_10 Histogram for File: " + file + " and class: HypsiboasCinerascens")
+        plt.title("File: " + file + "\nMFCCs_10 Histogram for class: HypsiboasCinerascens")
         plt.xlabel('MFCCs_10')
         plt.ylabel('Frequency')
         plt.show()
 
         plt.hist(type_2_y, color='blue', edgecolor='black')
-        plt.title("MFCCs_17 Histogram for File: " + file + " and class: HypsiboasCinerascens")
+        plt.title("File: " + file + "\nMFCCs_17 Histogram for class: HypsiboasCinerascens")
         plt.xlabel('MFCCs_17')
         plt.ylabel('Frequency')
         plt.show()
@@ -98,3 +99,14 @@ if __name__ == '__main__':
         plt.title("BoxPlots for file: " + file)
         plt.show()
 
+    ################################## Descriptive #########################################
+        print('File: ' + file + ', MFCCs_10 Mean: ' + str(np.mean(type_1_x + type_2_x)))
+        print('File: ' + file + ', MFCCs_17 Mean: ' + str(np.mean(type_1_y + type_2_y)))
+
+        cov_list = []
+        cov_list.append(type_1_x + type_2_x)
+        cov_list.append(type_1_y + type_2_y)
+        print('File: ' + file + ', Covariance Matrix: \n' + str(np.cov(cov_list)))
+
+        print('File: ' + file + ', MFCCs_10 Standard Deviation: ' + str(np.std(type_1_x + type_2_x)))
+        print('File: ' + file + ', MFCCs_17 Standard Deviation: ' + str(np.std(type_1_y + type_2_y)))
