@@ -99,6 +99,21 @@ if __name__ == '__main__':
         plt.title("BoxPlots for file: " + file)
         plt.show()
 
+    ################################## Errors #########################################
+
+        labels = ["HM MFCCs_10", "HM MFCCs_17", "HC MFCCs_10", "HC MFCCs_17"]
+        x_pos = np.arange(len(labels))
+        CTEs = [np.mean(type_1_x), np.mean(type_1_y), np.mean(type_2_x), np.mean(type_2_y)]
+        error = [np.std(type_1_x), np.std(type_1_y), np.std(type_2_x), np.std(type_2_y)]
+
+        fig, ax = plt.subplots()
+        ax.bar(x_pos, CTEs, yerr=error, align='center', alpha=0.5, ecolor='black', capsize=8)
+        ax.set_xticks(x_pos)
+        ax.set_xticklabels(labels)
+        ax.yaxis.grid(True)
+        plt.tight_layout()
+        plt.show()
+
     ################################## Descriptive #########################################
         print('File: ' + file + ', MFCCs_10 Mean: ' + str(np.mean(type_1_x + type_2_x)))
         print('File: ' + file + ', MFCCs_17 Mean: ' + str(np.mean(type_1_y + type_2_y)))
