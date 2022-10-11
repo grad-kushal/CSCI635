@@ -1,4 +1,6 @@
 import os
+
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -18,6 +20,8 @@ def read_data(filename):
 if __name__ == '__main__':
     files = ["/Frogs.csv", "/Frogs-subsample.csv"]
     path = os.path.abspath(os.getcwd())
+
+    print('matplotlib: {}'.format(matplotlib.__version__))
 
     for file in files:
         data = read_data(path + file)
