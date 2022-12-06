@@ -18,10 +18,10 @@ Problem 3: Multivariate Regression & Classification
 # meta-parameters for program
 trial_name = 'p6_reg0'  # will add a unique sub-string to output of this program
 degree = 6  # p, degree of model (PLEASE LEAVE THIS FIXED TO p = 6 FOR THIS PROBLEM)
-beta = 100  # regularization coefficient
+beta = 1.0  # regularization coefficient
 alpha = 0.01  # step size coefficient
-n_epoch = 1000  # number of epochs (full passes through the dataset)
-eps = 0.000000000000000001  # controls convergence criterion
+n_epoch = 2000  # number of epochs (full passes through the dataset)
+eps = 0.0001  # controls convergence criterion
 
 
 # begin simulation
@@ -45,7 +45,8 @@ def regress(X, theta):
 
 
 def bernoulli_log_likelihood(X, y):
-    return -1 * (y * np.log(calculate_f_theta(X)) + (1 - y) * np.log(1 - calculate_f_theta(X)))
+    fthetaa = calculate_f_theta(X)
+    return -1 * (y * np.log(fthetaa) + (1 - y) * np.log(1 - fthetaa))
 
 
 def calculate_f_theta(x):
@@ -119,7 +120,7 @@ cols = data2.shape[1]
 X2 = data2.iloc[:, 1:cols]
 y2 = data2.iloc[:, 0:1]
 
-# convert to numpy arrays and initalize the parameter array theta
+# convert to numpy arrays and initialize the parameter array theta
 X2 = np.array(X2.values)
 y2 = np.array(y2.values)
 w = np.zeros((1, X2.shape[1]))
@@ -177,7 +178,7 @@ xx1 = xx.ravel()
 yy1 = yy.ravel()
 grid = np.c_[xx1, yy1]
 grid_nl = []
-# re-apply feature map to inputs x1 & x2
+# re-apply feature map to input x1 & x2
 for i in range(1, degree + 1):
     for j in range(0, i + 1):
         feat = np.power(xx1, i - j) * np.power(yy1, j)

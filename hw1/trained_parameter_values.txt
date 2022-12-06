@@ -1,0 +1,1 @@
+{'layer1.weight': array([[-12.258198,  -6.725685]], dtype=float32), 'layer1.bias': array([0.22794616], dtype=float32)}
