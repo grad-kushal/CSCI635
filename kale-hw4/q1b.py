@@ -7,12 +7,12 @@ from matplotlib import pyplot as plt
 # meta-parameters for program
 prob = "Q1B_"
 beta = 0.01  # regularization coefficient or lambda
-alpha = 0.0001  # step size coefficient or learning rate
+alpha = 0.0003  # step size coefficient or learning rate
 eps = 0.000001  # controls convergence criterion
-n_epoch = 599999  # number of epochs (full passes through the dataset)
+n_epoch = 148999  # number of epochs (full passes through the dataset)
 trial_name = prob + "beta:" + str(beta) + "alpha:" + str(
     alpha) + "n_epochs:" + str(n_epoch)  # will add a unique sub-string to output of this program
-epsilon = 0.0001  # secant approximation
+epsilon = 0.001  # secant approximation
 
 
 def load_data():
@@ -35,6 +35,7 @@ def one_hot_encoding(y):
     max = np.max(y) + 1
     y = np.eye(max)[y]
     return y
+
 
 # def onehotencoding(y):
 #     """
@@ -154,44 +155,6 @@ def predict(X, theta):
     return np.argmax(activated2, axis=1)
 
 
-# def secant_approximation_delta(dW, dc, dw, db, X, one_hot_encoding_y, theta):
-#     """
-#     Compares the computed gradient with the numerical gradient using SECANT APPROXIMATION
-#     :param dW: Computed gradient of the first layer
-#     :param dc: Computed gradient of the first layer bias
-#     :param dw: Computed gradient of the second layer
-#     :param db: Computed gradient of the second layer bias
-#     :param X: Dataset
-#     :param one_hot_encoding_y: One-hot encoded labels
-#     :param beta: Regularization coefficient
-#     :return: Difference between the computed gradient and the numerical gradient
-#     """
-#     dW = dW.flatten()
-#     dc = dc.flatten()
-#     dw = dw.flatten()
-#     db = db.flatten()
-#     grad = np.concatenate((dW, dc, dw, db))
-#     numgrad = np.zeros(grad.shape)
-#     perturb = np.zeros(grad.shape)
-#     for i in range(len(grad)):
-#         perturb[i] = epsilon
-#         grad_new = np.copy(grad)
-#         grad_new[i] += epsilon
-#         theta_temp = (grad_new[:6].reshape(3, 2), grad_new[6:9].reshape(1, 3), grad_new[9:18].reshape(3, 3),
-#                       grad_new[18:].reshape(1, 3))
-#         L2, _, _, _, _ = compute_cost(X, one_hot_encoding_y, theta_temp)
-#         grad_new[i] -= epsilon
-#         theta_temp = (grad_new[:6].reshape(3, 2), grad_new[6:9].reshape(1, 3), grad_new[9:18].reshape(3, 3),
-#                       grad_new[18:].reshape(1, 3))
-#         L1, _, _, _, _ = compute_cost(X, one_hot_encoding_y, theta_temp)
-#         numgrad[i] = (L2 - L1) / (2 * epsilon)
-#         perturb[i] = 0
-#         # diff = np.linalg.norm(numgrad - grad) / np.linalg.norm(numgrad + grad)
-#         diff = np.subtract(numgrad, grad)
-#         # print(abs(diff))
-#     return abs(diff)
-
-
 def check_grad(dW, dc, dw, db, X, one_hot_encoding_y, theta):
     """
     Compares the computed gradient with the numerical gradient using SECANT APPROXIMATION
@@ -221,10 +184,7 @@ def check_grad(dW, dc, dw, db, X, one_hot_encoding_y, theta):
         L2, _, _, _, _ = compute_cost(X, one_hot_encoding_y, theta_temp)
         numgrad[i] = (L2 - L1) / (2 * epsilon)
         perturb[i] = 0
-        # diff = np.linalg.norm(numgrad - grad) / np.linalg.norm(numgrad + grad)
-        # diff = np.subtract(numgrad, grad)
-        # print(abs(diff))
-    return numgrad, grad
+    return np.abs(np.subtract(numgrad, grad)).min()
 
 
 def main():
@@ -247,46 +207,38 @@ def main():
     print("y.shape = " + str(y.shape))
     print("one_hot_encoding_y.shape = " + str(one_hot_encoding_y.shape))
 
+    # np.random.seed(654)
     np.random.seed(654)  # Random seed to get consistent results
     m = X.shape[0]  # number of training examples
     W = np.random.randn(3, 2)  # initialize W randomly
-    print("W: " + str(W))
-    # W = np.ones((2, X.shape[1]))
-    c = np.random.randn(1, 3)  # initialize c randomly
-    # c = np.ones((1, X.shape[1]))
+    # c = np.random.randn(1, 3)  # initialize c randomly
+    c = np.ones((1, 3))  # initialize c randomly
     w = np.random.randn(1, 3)  # initialize w randomly
-    # w = np.ones((1, 2))
-    # w = np.array([1, -2])
-    b = np.random.randn(1, 1)  # initialize b randomly
-    # b = np.array([0])
-    # b = np.ones((1, 1))
+    # b = np.random.randn(1, 1)  # initialize b randomly
+    b = np.ones((1, 1))  # initialize b randomly
     theta = (W, c, w, b)
 
     cost = []
     epochs = []
+
+    np.set_printoptions(suppress=True)
 
     # Run the algorithm
     for epoch in range(n_epoch):
         epochs.append(epoch)
         L, activated1, y1, activated2, y2 = compute_cost(X, one_hot_encoding_y, theta)
         cost.append(L)
-        if epoch % 80000 == 1:
+        if epoch % 30000 == 1:
             print("Epoch: " + str(epoch) + " Loss: " + str(L))
         # Backward propagation
         dW, dc, dw, db = compute_grad(m, X, one_hot_encoding_y, theta, activated1, y1, activated2)
-        num_grad, grad = check_grad(dW, dc, dw, db, X, one_hot_encoding_y, theta)
-        # diff = secant_approximation_delta(dW, dc, dw, db, X, one_hot_encoding_y, theta)
-        gradient_check_passed = True
-        for i in range(len(grad)):
-            if abs(num_grad[i] - grad[i]) > 1e-2:
-                gradient_check_passed = False
-                # print(abs(num_grad[i] - grad[i]))
-            else:
-                gradient_check_passed = True
-                # print("Gradient check passed")
-        if not gradient_check_passed:  # If the computed gradient is not correct, stop the algorithm
+        diff = check_grad(dW, dc, dw, db, X, one_hot_encoding_y, theta)
+        if diff > 1e-4:
+            print("Gradient check failed")
             break
         else:
+            if epoch % 10000 == 1:
+                print("Gradient check passed")
             # Gradient descent parameter update
             W = W - alpha * dW
             c = c - alpha * dc

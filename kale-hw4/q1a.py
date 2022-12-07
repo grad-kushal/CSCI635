@@ -139,7 +139,6 @@ def compare_with_numerical_gradient(dW, dc, dw, db, X, one_hot_encoding_y, theta
     :param db: Computed gradient of the second layer bias
     :param X: Dataset
     :param one_hot_encoding_y: One-hot encoded labels
-    :param beta: Regularization coefficient
     :return: Difference between the computed gradient and the numerical gradient
     """
     dW = dW.flatten()
@@ -162,7 +161,6 @@ def compare_with_numerical_gradient(dW, dc, dw, db, X, one_hot_encoding_y, theta
         L1, _, _, _, _ = compute_cost(X, one_hot_encoding_y, theta_temp)
         numgrad[i] = (L2 - L1) / (2 * epsilon)
         perturb[i] = 0
-        # diff = np.linalg.norm(numgrad - grad) / np.linalg.norm(numgrad + grad)
         diff = np.subtract(numgrad, grad)
     return abs(diff)
 
@@ -191,15 +189,9 @@ def main():
     np.random.seed(97)  # Random seed to get consistent results
     m = X.shape[0]  # number of training examples
     W = np.random.randn(2, 2)  # initialize W randomly
-    print("W: " + str(W))
     c = np.random.randn(1, 2)  # initialize c randomly
-    # c = np.ones((1, X.shape[1]))
     w = np.random.randn(1, 2)  # initialize w randomly
-    # w = np.ones((1, 2))
-    # w = np.array([1, -2])
     b = np.random.randn(1, 1)  # initialize b randomly
-    # b = np.array([0])
-    # b = np.ones((1, 1))
     theta = (W, c, w, b)
 
     cost = []
@@ -224,7 +216,7 @@ def main():
             else:
                 # Gradient is correct
                 if epoch % 10000 == 1:
-                    print("CORRECT GRADIENT")
+                    print("CORRECT GRADIENT", i+1)
         if not flag:  # If the computed gradient is not correct, stop the algorithm
             break
         else:
