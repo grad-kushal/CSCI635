@@ -12,7 +12,7 @@ eps = 0.000001  # controls convergence criterion
 n_epoch = 50000  # number of epochs (full passes through the dataset)
 trial_name = prob + "beta:" + str(beta) + "alpha:" + str(
     alpha) + "n_epochs:" + str(n_epoch)  # will add a unique sub-string to output of this program
-epsilon = 0.001  # secant approximation
+epsilon = 0.001  # secant approximation coefficient
 
 
 def load_data():

@@ -184,7 +184,7 @@ def check_grad(dW, dc, dw, db, X, one_hot_encoding_y, theta):
         L2, _, _, _, _ = compute_cost(X, one_hot_encoding_y, theta_temp)
         numgrad[i] = (L2 - L1) / (2 * epsilon)
         perturb[i] = 0
-    return np.abs(np.subtract(numgrad, grad)).min()
+    return np.amin(np.abs(np.subtract(numgrad, grad)))
 
 
 def main():
