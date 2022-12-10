@@ -217,8 +217,8 @@ def main():
         cost.append(L)
         # Backward propagation
         dW, dc, dw, db = compute_grad(m, X, one_hot_encoding_y, theta, activated1, y1, activated2)
-        diff = check_grad(dW, dc, dw, db, X, one_hot_encoding_y, theta)
-        # diff = 0.00000001
+        # diff = check_grad(dW, dc, dw, db, X, one_hot_encoding_y, theta)
+        diff = 0.00000001
         if diff > 1e-2:
             print("Gradient check failed", diff)
             break
